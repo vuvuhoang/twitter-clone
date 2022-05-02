@@ -3,7 +3,7 @@ import { useState } from "react";
 
 function Input() {
     const [input, setInput] = useState("");
-    const [selectedfile, setSelectedFile] = useState(null);
+    const [selectedFile, setSelectedFile] = useState(null);
 
   return (
     <div className={`border-b border-gray-700 p-3 flex space-x-3 overflow-y-scroll`}>
