@@ -9,6 +9,7 @@ import {
     updateDoc,
   } from "@firebase/firestore";
   import { getDownloadURL, ref, uploadString } from "@firebase/storage";
+  import { useSession } from "next-auth/react";
 
 export default function Input() {
     const [input, setInput] = useState("");
@@ -16,15 +17,16 @@ export default function Input() {
     const [showEmojis, setShowEmojis] = useState(false);
     const [loading, setLoading] = useState(false);
     const filePickerRef = useRef(null);
+    const { data: session } = useSession();
 
     async function sendPost() {
         if (loading) return;
         setLoading(true);
         const docRef = await addDoc(collection(db,'posts'), {
-            // id: session.user.uid,
-            // username: session.user.name,
-            // userImg: session.user.image,
-            // tag: session.user.tag,
+            id: session.user.uid,
+            username: session.user.name,
+            userImg: session.user.image,
+            tag: session.user.tag,
             text: input,
             timestamp: serverTimestamp(),
         });
@@ -58,7 +60,10 @@ export default function Input() {
 
   return (
     <div className={`border-b border-gray-700 p-3 flex space-x-3 overflow-hidden ${loading && "opacity-60"}`}>
-        <img src="https://i.ibb.co/TBsPqCC/profile.jpg" className="h-11 w-11 rounded-full cursor-pointer" alt=""/>
+        <img 
+            src={session.user.image}
+            className="h-11 w-11 rounded-full cursor-pointer" 
+            alt=""/>
         <div className="w-full divide-y divide-gray-700">
             <div className={`${selectedFile && "pb-y"} ${input && "space-y-2.5"}`}>
                 <textarea value={input} onChange={(e) => setInput(e.target.value)} rows="2" placeholder="What's happening?" className="bg-transparent outline-none text-[#d9d9d9] text-lg placeholder-gray-500 tracking-wide w-full min-h-[50px]"/>
